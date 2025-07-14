@@ -1,16 +1,60 @@
-from src.decorators import *
-
 class Setting:
-    def __init__(self, member_id: str, initial_value):
-        self.initialzie_properties(member_id, initial_value)
-        self.value = initial_value
-    def __str__(self):
+    """
+    A class representing a member, which has a unique identifier and a value.
+    """
+
+    def __init__(self, member_id: str, initial_value): 
+        """
+        Initializes a member with a unique identifier and an initial value.
+        
+        Args:
+            member_id (str): A unique identifier for the member.
+            initial_value: The initial value of the member.
+        """
+
+        # Set the properties of the member
+        self._initialize_properties(member_id, initial_value)
+    def __str__(self) -> str:
+        """
+        Returns a string representation of the member.
+
+        Returns:
+            str: A string representation of the member in the format "member_id: value".
+        """
+
         return str({self.member_id: self.value})
-    def __repr__ (self):
+    def __repr__ (self) -> str:
+        """
+        Returns a string representation of the member for debugging purposes.
+        
+        Returns:
+            str: A string representation of the member in the format "Setting(member_id = member_id, initial_value = value)".
+        """
+        
         return f"Setting(member_id = {self.member_id}, initial_value = {self.value})"
     def __call__(self, value):
+        """
+        Allows the member to be called with a new value, updating its value.
+
+        Args:
+            value: The new value to set for the member.
+        """
+
         self.value = value
-    def __add__(self, other):
+    def __add__(self, other) -> 'Setting':
+        """
+        Combines the value of this member with another member's value if they are compatible.
+        Args:
+            other: (Setting): Another Setting instance to combine with.
+            
+        Returns:
+            Setting: A new Setting instance with the combined value if compatible, otherwise raises an error.
+        Raises:
+            ValueError: If the values are not compatible for addition.
+            TypeError: If the other object is not a Setting instance.
+        """
+
+        # Check if the other object is an instance of Setting
         if isinstance(other, Setting):
             if type(self.value) is type(other.value) and self.member_id == other.member_id:
                 new_value = self.value + other.value
@@ -20,7 +64,16 @@ class Setting:
         else: 
             raise TypeError()
                 
-    def initialzie_properties(self, member_id, initial_value):
+    def _initialize_properties(self, member_id, initial_value):
+        """
+        Initializes the properties of the member.
+        
+        Args:
+            member_id (str): A unique identifier for the member.
+            initial_value: The initial value of the member.
+        """
+
+        # Initialize the properties of the member
         self.member_id = member_id
         self.value = initial_value
     @property
@@ -30,14 +83,18 @@ class Setting:
     def member_id(self, member_id: str):
         self._member_id = member_id
     @property
-    def value(self) -> any:
+    def value(self):
         return self._value
     @value.setter
-    def value(self, value: any):
+    def value(self, value):
         self._value = value
-    @property
-    @serialize("member_id", "value")
-    def serialized_state(self) -> dict:
-        return self._serialized_state
-    def to_dict(self):
+    def to_dict(self) -> dict:
+        """
+        Returns the dictionary representation of the member's state.
+
+        Returns:
+            dict: A dictionary representation of the member's state.
+        """
+
+        # Returns the dictionary representation of the member's state
         return{self.member_id: self.value}
