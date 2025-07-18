@@ -12,13 +12,13 @@ class MasterGroup:
         """
         Initialized a group with a unique identifier.
         
-        Args:
+        Params:
             member_id (str): A unique identifier for the group.
         """
 
         # Set the properties of the group which include a unique identifier and a dictionary to hold members.
         self.member_id = member_id
-        self.members = {}
+        self._members = []
     def __str__(self) -> str:
         """
         Returns a string representation of the group.
@@ -27,7 +27,8 @@ class MasterGroup:
             str: A string representation of the group in the format "Group ID: member_id, Members: [member1, member2, ...]".
         """
 
-        return f"Group ID: {self.member_id}, Members: {[{value} for value in self.members.values()]}"
+        # Creates and returns a string that represents the Configuration as a whole. 
+        return f"Group ID: {self.member_id}, Members: {[f'{member[1]}' for member in self.members]}"
     def __repr__(self) -> str:
         """
         Returns a string representation of the group for debugging purposes.
@@ -36,15 +37,18 @@ class MasterGroup:
             str: A string representation of the group in the format "Group(member_id), [member1, member2, ...]".
         """
 
-        return f"Group({self.member_id}), {[f"{repr(value)}" for value in self.members.values()]}"
-    def __call__(self, member_id : str, initial_value = None) -> 'Setting | SubGroup':
+        return f"Group({self.member_id}), {[f"{repr(value[1])}" for value in self.members]}"
+    def __call__(self, member_id : str | None = None,
+                 member : 'MasterGroup | SubGroup | Setting | None' = None,
+                 initial_value = None) -> 'Setting | SubGroup | MasterGroup':
         """
         Allows the group to be called with a member ID and an optional initial value,
         adding a new member to the group.
 
-        Args:
-            member_id (str): A unique identifier for the member to be added.
         Params:
+            member_id (str): A unique identifier for the member to be added.
+            member (MasterGroup | SubGroup | Setting):        
+        Args:
             initial_value: The initial value of the member, if applicable.
 
         Returns:
@@ -52,24 +56,29 @@ class MasterGroup:
             Group: A new SubGroup instance if initial_value is not provided.
         """
        
-        # Creates and returns a new member, a Setting if intial_value is not None, or a SubGroup if it is None.
-        if initial_value is not None:
-            new_member = Setting(member_id, initial_value)
-            self.add_member(new_member)
-            return new_member
-        else: 
-            new_member = SubGroup(member_id, self)
-            self.add_member(new_member)
-            return new_member
+        if member_id is not None:
+            if initial_value is not None:
+                new_member = Setting(member_id, initial_value)
+                self.add_member(new_member)
+                return new_member
+            else:
+                new_member = SubGroup(member_id, self)
+                self.add_member(new_member)
+                return new_member
+        elif member is not None:
+            self.add_member(member)
+            return member
+        raise TypeError("Must add one of the following; New Setting(member_id, initial_vaile), New Group(MasterGroup, SubGroup), Member(Setting, MasterGroup, SubGroup)")
     @property
     def member_id(self) -> str:
         """
         Provides access to the private variable member_id.
 
         Returns:
-            _member_id: A unique identifier for the member to be added.
+            _member_id (str): A unique identifier for the member to be added.
         """
 
+        # Provides access to the private variable _member_id through member_id
         return self._member_id
     @member_id.setter
     def member_id(self, member_id: str):
@@ -77,40 +86,76 @@ class MasterGroup:
         Assigns a new member id to the private variable member_id.
         
         Parmas: 
-            member_id: A unique identifier for the member to be added.
+            member_id (str): A unique identifier for the member to be added.
         """
 
         self._member_id = member_id
     @property
-    def members(self) -> dict:
+    def members(self) -> list:
         """
         Returns the private variable _members.
 
         Returns:
-            _members: 
+            _members (list): A list of the current members of the Master Group.
         """
 
         return self._members
-    @members.setter
-    def members(self, members: dict):
-        self._members = members
     @members.deleter
     def members(self):
-        self._members = {}
+        """
+        Deletes the private variable _members.
+        """
+
+        del self._members
     @property
-    def serialized_state(self):
+    def serialized_state(self)-> dict:
+        """
+        Calls the to_dict methods to assemble the dictionary representation of the configuration.
+
+        Returns:
+            to_dict (dict): A dictionary representation of the entire configuration.
+        """
+
+        # returns the a dictionary representation of the the enitre configuration.
         return self.to_dict()
-    def add_member(self, member):
-        self.members[member.member_id] = member
-    def remove_member(self, member_id: str):
-        if member_id in self.members:
-            del self.members[member_id]
-        else:
-            raise KeyError(f"Member with ID {member_id} not found in group {self.member_id}")
-    def to_dict(self):
+    def add_member(self, member_to_add: 'Setting | SubGroup | MasterGroup'):
+        """
+        Adds a member to the configuration.
+        
+        Params:
+            member_to_add (Setting | SubGroup): A member of the configuration.
+        """
+
+        # Adds a new entry.
+        self._members.append([member_to_add.member_id, member_to_add])
+    def remove_member(self, member_id: str) -> bool:
+        """
+        Removes a member with the member_id from the configuration.
+
+        Params:
+            member_id (str): A unique identifier for the member. 
+        """
+
+        found_member = False # Tracks if member is found.
+        # Loops through the members list, if a member with the correct id is found. Removes it.
+        for i in (0, len(self.members)):
+            if self.members[i] == member_id:
+                self.members[i].pop
+                found_member = True
+        return found_member # Returns bool to determine if member is found and deleted
+    def to_dict(self)-> dict:
+        """
+        Convert the group and its members to a dictionary representation.
+
+        Returns:
+            dict: A dictionary containing the group's ID and all its members' configurations.
+        """
+
+        # This function has each member return it's set up members to build the complete configuration.
         app_dict = {}
-        for member in self.members.values():
+        for member in self.members:
             app_dict.update(member.to_dict())
+        # Returns the formatted dictionary representation of the configuration.
         return {
             "id": self.member_id,
             "config":{
@@ -118,31 +163,85 @@ class MasterGroup:
             }
         }
 class SubGroup(MasterGroup):
-    def __init__(self, member_id: str, master_group: object = None):
+    """
+    A subgroup within a configuration hierarchy.
+    
+    SubGroup extends MasterGroup to provide hierarchical organization of settings.
+    It maintains a reference to its parent group and prevents circular references
+    in the configuration hierarchy.
+    """
+
+    def __init__(self, member_id: str, master_group: 'MasterGroup | SubGroup'):
+        """
+        Initialize a SubGroup instance.
+
+        Params:
+            member_id (str): Unique identifier for this subgroup.
+            master_group (MasterGroup): Parent group containing this subgroup.
+        """
+
         super().__init__(member_id)
-        self.master_group = master_group
-    @property
-    def master_group(self):
-        return self._master_group
-    @master_group.setter
-    def master_group(self, master_group: object):
         self._master_group = master_group
-    def add_member(self, member):
+    @property
+    def master_group(self) -> 'MasterGroup':
+        """
+        Get the parent group of this subgroup.
+
+        Returns:
+            MasterGroup: The parent group containing this subgroup.
+        """
+        
+        return self._master_group
+    def add_member(self, member: 'Setting | SubGroup'):
+        """
+        Add a new member to this subgroup.
+
+        Checks for circular references before adding the member.
+
+        Params:
+            member (Setting | SubGroup): The member to add to this subgroup.
+
+        Raises:
+            ValueError: If adding the member would create a circular reference.
+        """
+
         if not self.check_heritage(member, self.master_group):
             raise ValueError(f"To avoid circular references, {member.member_id} cannot be added to {self.member_id}")
         super().add_member(member)
-    def check_heritage(self, member_to_add, master_group):
+    def check_heritage(self, member_to_add: 'Setting | SubGroup', master_group: 'MasterGroup | SubGroup') -> bool:
+        """
+        Check if adding a member would create a circular reference.
+
+        Traverses up the group hierarchy to ensure the member is not already
+        present in the parent chain.
+
+        Params:
+            member_to_add (Setting | SubGroup): The member to check.
+            master_group (MasterGroup): The current group to check against.
+
+        Returns:
+            bool: True if the member can be added safely, False if it would create a circular reference.
+        """
+
         searching = True
         while searching:
-            if isinstance(master_group, MasterGroup) and member_to_add is not master_group:
-                return True
-            elif member_to_add is master_group:
+            if member_to_add == master_group:
                 return False
+            elif isinstance(master_group, MasterGroup):
+                return True
             else:
                 master_group = master_group.master_group
-    def to_dict(self):
+        return False
+    def to_dict(self) -> dict:
+        """
+        Convert the subgroup to a dictionary representation.
+
+        Returns:
+            dict: A dictionary containing all members of this subgroup.
+                Format: {member_id: {member_configurations}}
+        """
+
         member_dict = {}
-        for member in self.members.values():
+        for member in self.members:
             member_dict.update(member.to_dict())
         return {self.member_id: member_dict}
-            
