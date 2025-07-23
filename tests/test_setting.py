@@ -41,3 +41,13 @@ def test_str_repr(setting_example, params):
     assert str(test_setting) == str({params["member_id"]: params["initial_value"]})
     assert repr(test_setting) == f"Setting(member_id = {params["member_id"]}, initial_value = {params["initial_value"]})"
 
+@pytest.mark.parametrize("params", setting_setup_params, ids=test_id)
+def test_call(setting_example, params):
+    """
+    Tests the call dunder method for changing the value held at member.value
+    """
+    test_setting = setting_example()
+    test_setting(params["initial_value"])
+
+    assert test_setting.value == params["initial_value"]
+
