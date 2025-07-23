@@ -42,8 +42,9 @@ class FigMan:
 
         # Saves the configuraiton at the file_path provided.
         self.lcm._save_config(config, file_path)
-    def load(self, config_id):
-        """Load a configuration from a file.
+    def load(self, config_id) -> MasterGroup:
+        """
+        Load a configuration from a file.
 
         Params:
             config: The configuration object to load into.
