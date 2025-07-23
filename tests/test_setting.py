@@ -32,3 +32,12 @@ def test_init(setting_example, params):
     assert test_setting.member_id == params["member_id"] and type(test_setting.member_id) == type(params["member_id"]) # Tests that member_id's value and type are correct
     assert test_setting.value == params["initial_value"] and type(test_setting.value) == type(params["initial_value"]) # Tests that initial_value's value and type are correct
 
+@pytest.mark.parametrize("params", setting_setup_params, ids=test_id)
+def test_str_repr(setting_example, params):
+    """
+    Tests __str__ and __repr__ for expected results
+    """
+    test_setting = setting_example(**params)
+    assert str(test_setting) == str({params["member_id"]: params["initial_value"]})
+    assert repr(test_setting) == f"Setting(member_id = {params["member_id"]}, initial_value = {params["initial_value"]})"
+
