@@ -1,0 +1,34 @@
+import pytest
+
+from src.setting import Setting
+"""
+Test for the setting class.
+ -Initializaiton test
+ -Str and repr test
+ -Property getter and setter test
+ -__add__ test
+ -__call__ test
+ -to_dict test
+"""
+# setting_setup_params is the base case for creating the Setting class for testing
+# it covers all "legal" inputs for both the member_id and initial value
+
+setting_setup_params = [{"member_id": "test_id", "initial_value": 1}, # "test_id"-member_id | 1-initial_value | "string_int"-test_id
+                        {"member_id": "test_id", "initial_value": 1.0109239},
+                        {"member_id": "test_id", "initial_value": -1.0123},
+                        {"member_id": "test_id", "initial_value": "test_value"},
+                        {"member_id": "test_id", "initial_value": True},
+                        {"member_id": "test_id", "initial_value": False}
+                        ]
+test_id = [f"{param["member_id"]!r}--{type(param["initial_value"]).__name__}" for param in setting_setup_params]
+
+@pytest.mark.parametrize("params", setting_setup_params, ids=test_id)
+def test_init(setting_example, params):
+    """
+    Tests that Setting initializes and that both member_id and initial_value only accept valid arguements
+    """
+    test_setting = setting_example(**params) # Unpack kwargs for Setting creation
+    assert isinstance(test_setting, Setting)# Tests that Setting is instantiated correctly
+    assert test_setting.member_id == params["member_id"] and type(test_setting.member_id) == type(params["member_id"]) # Tests that member_id's value and type are correct
+    assert test_setting.value == params["initial_value"] and type(test_setting.value) == type(params["initial_value"]) # Tests that initial_value's value and type are correct
+

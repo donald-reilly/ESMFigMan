@@ -32,3 +32,6 @@ src/__pycache__/validation.cpython-313.pyc
 copilot-instructions.md
 .github/chatmodes/Tutor.chatmode.md
 .github/chatmodes/Docstrings and comments.chatmode.md
+tests/__pycache__/conftest.cpython-313-pytest-8.4.1.pyc
+tests/__pycache__/example_classes.cpython-313.pyc
+tests/__pycache__/test_setting.cpython-313-pytest-8.4.1.pyc
