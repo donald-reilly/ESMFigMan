@@ -1,0 +1,14 @@
+{"mixed_setup": [{"member_id": "test_id", "initial_value": 1},
+                {"member_id": "test_id", "initial_value": 1.0109239},
+                {"member_id": "test_id", "initial_value": -1.0123},
+                {"member_id": "test_id", "initial_value": "test_value"},
+                {"member_id": "test_id", "initial_value": true},
+                {"member_id": "test_id", "initial_value": false}
+                ],
+ "math_setup": [{"member_id": "test_id", "initial_value": 1, "additional_value": 1},
+                {"member_id": "test_id", "initial_value": 1.0109239, "additional_value": 1.0109239},
+                {"member_id": "test_id", "initial_value": -1.0123, "additional_value": -1.0123},
+                {"member_id": "test_id", "initial_value": 0, "additional_value": 0},
+                {"member_id": "test_id", "initial_value": 0.0, "additional_value": 0.0}
+                ]
+}
