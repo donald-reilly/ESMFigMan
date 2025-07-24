@@ -22,7 +22,7 @@ class Setting:
             str: A string representation of the member in the format "member_id: value".
         """
 
-        return str({self.member_id: self.value})
+        return str(self.to_dict)
     def __repr__ (self) -> str:
         """
         Returns a string representation of the member for debugging purposes.
@@ -54,7 +54,7 @@ class Setting:
             TypeError: If the other object is not a Setting instance.
         """
 
-        # Check if the other object is an instance of Setting
+        # Check if the other object is an instance of Setting and shares the same member_id
         if isinstance(other, Setting):
             if type(self.value) is type(other.value) and self.member_id == other.member_id:
                 new_value = self.value + other.value
@@ -74,20 +74,25 @@ class Setting:
         """
 
         # Initialize the properties of the member
-        self.member_id = member_id
+        self.member_id = member_id 
         self.value = initial_value
+        self._to_dict = {self.member_id: self.value}
+        self._has_changed = False # Tracks object state for dictionary update
     @property
     def member_id(self) -> str:
-        return self._member_id
+        return self._member_id # Grants access to the private variable _member_id
     @member_id.setter
     def member_id(self, member_id: str):
-        self._member_id = member_id
+        self._has_changed = True # Update state change 
+        self._member_id = member_id # Setter for the private variable _member_id
     @property
     def value(self):
         return self._value
     @value.setter
     def value(self, value):
+        self._has_changed = True # Update state change
         self._value = value
+    @property
     def to_dict(self) -> dict:
         """
         Returns the dictionary representation of the member's state.
@@ -95,6 +100,10 @@ class Setting:
         Returns:
             dict: A dictionary representation of the member's state.
         """
-
+        
         # Returns the dictionary representation of the member's state
-        return{self.member_id: self.value}
+        if self._has_changed is True:
+            self._has_changed = False
+            self._to_dict = {self.member_id: self.value} 
+        return self._to_dict
+            
