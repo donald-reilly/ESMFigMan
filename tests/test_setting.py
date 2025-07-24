@@ -58,3 +58,14 @@ def test_add(setting_example, params):
     result_setting = test_setting_0 + test_setting_1
 
     assert result_setting.value == params["initial_value"] + params["additional_value"]
+
+@pytest.mark.parametrize("params", setting_setup_params["mixed_setup"], ids=mixed_test_id)
+def test_to_dict(setting_example, params):
+    """
+    Tests the to_dict method.
+    Need to verify that to dict works even after value changes. e
+    """
+    test_setting = setting_example(**params)
+    assert test_setting.to_dict == {params["member_id"]: params["initial_value"]}
+    test_setting("setting")
+    assert test_setting.to_dict == {params["member_id"]: "setting"}
