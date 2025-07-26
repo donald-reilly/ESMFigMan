@@ -7,7 +7,7 @@ class Setting:
         """
         Initializes a member with a unique identifier and an initial value.
         
-        Args:
+        Params:
             member_id (str): A unique identifier for the member.
             initial_value: The initial value of the member.
         """
@@ -36,7 +36,7 @@ class Setting:
         """
         Allows the member to be called with a new value, updating its value.
 
-        Args:
+        Params:
             value: The new value to set for the member.
         """
 
@@ -44,7 +44,8 @@ class Setting:
     def __add__(self, other) -> 'Setting':
         """
         Combines the value of this member with another member's value if they are compatible.
-        Args:
+
+        Params:
             other: (Setting): Another Setting instance to combine with.
             
         Returns:
@@ -68,7 +69,7 @@ class Setting:
         """
         Initializes the properties of the member.
         
-        Args:
+        Params:
             member_id (str): A unique identifier for the member.
             initial_value: The initial value of the member.
         """
