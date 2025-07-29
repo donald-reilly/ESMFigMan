@@ -32,15 +32,20 @@ class Setting:
         """
         
         return f"Setting(member_id = {self.member_id}, initial_value = {self.value})"
-    def __call__(self, value):
+    def __call__(self, member_id: str = "", value = None):
         """
-        Allows the member to be called with a new value, updating its value.
+        Allows the member to be called with a new value, or member_id updating their values.
 
         Params:
-            value: The new value to set for the member.
+            member_id: (str) A member id for the instance
+            value: The value for the instance.
         """
 
-        self.value = value
+        if value:
+            self.value = value
+        if member_id:
+            self.member_id = member_id
+
     def __add__(self, other) -> 'Setting':
         """
         Combines the value of this member with another member's value if they are compatible.
