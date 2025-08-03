@@ -11,9 +11,11 @@ class Setting:
             member_id (str): A unique identifier for the member.
             initial_value: The initial value of the member.
         """
-
-        # Set the properties of the member
-        self._initialize_properties(member_id, initial_value)
+        # Initialize the properties of the member
+        self.member_id = member_id 
+        self.value = initial_value
+        self._to_dict = {self.member_id: self.value}
+        self._has_changed = False # Tracks object state for dictionary update
     def __str__(self) -> str:
         """
         Returns a string representation of the member.
@@ -69,21 +71,6 @@ class Setting:
                 raise ValueError("Cannot combine dissimilar settings")
         else: 
             raise TypeError()
-                
-    def _initialize_properties(self, member_id, initial_value):
-        """
-        Initializes the properties of the member.
-        
-        Params:
-            member_id (str): A unique identifier for the member.
-            initial_value: The initial value of the member.
-        """
-
-        # Initialize the properties of the member
-        self.member_id = member_id 
-        self.value = initial_value
-        self._to_dict = {self.member_id: self.value}
-        self._has_changed = False # Tracks object state for dictionary update
     @property
     def member_id(self) -> str:
         return self._member_id # Grants access to the private variable _member_id
@@ -98,7 +85,7 @@ class Setting:
     def value(self, value):
         self._has_changed = True # Update state change
         self._value = value
-    @property
+    
     def to_dict(self) -> dict:
         """
         Returns the dictionary representation of the member's state.
