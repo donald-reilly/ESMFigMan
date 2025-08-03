@@ -35,3 +35,11 @@ copilot-instructions.md
 tests/__pycache__/conftest.cpython-313-pytest-8.4.1.pyc
 tests/__pycache__/example_classes.cpython-313.pyc
 tests/__pycache__/test_setting.cpython-313-pytest-8.4.1.pyc
+tests/DubTesting.code-workspace
+lifecycle_manager.txt
+serialize.txt
+setting.txt
+setup.txt
+src/rantnrave/figman.txt
+src/rantnrave/group.txt
+src/rantnrave/validation.txt
