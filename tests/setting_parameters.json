@@ -11,4 +11,4 @@
                 {"member_id": "test_id", "initial_value": 0, "additional_value": 0},
                 {"member_id": "test_id", "initial_value": 0.0, "additional_value": 0.0}
                 ]
-}
+            }
