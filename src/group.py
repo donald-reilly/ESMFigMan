@@ -10,7 +10,7 @@ class MasterGroup:
 
     def __init__(self, member_id: str):
         """
-        Initialized a group with a unique identifier.
+        Initialize a group with a unique identifier.
         
         Params:
             member_id (str): A unique identifier for the group.
@@ -28,7 +28,7 @@ class MasterGroup:
         """
 
         # Creates and returns a string that represents the Configuration as a whole. 
-        return f"Group ID: {self.member_id}, Members: {[f'{member[1]}' for member in self.members]}"
+        return f"Group ID: {self.member_id}, Members: {[f'{member}' for member in self.members]}"
     def __repr__(self) -> str:
         """
         Returns a string representation of the group for debugging purposes.
@@ -37,38 +37,39 @@ class MasterGroup:
             str: A string representation of the group in the format "Group(member_id), [member1, member2, ...]".
         """
 
-        return f"Group({self.member_id}), {[f"{repr(value[1])}" for value in self.members]}"
-    def __call__(self, member_id : str | None = None,
-                 member : 'MasterGroup | SubGroup | Setting | None' = None,
-                 initial_value = None) -> 'Setting | SubGroup | MasterGroup':
+        return f"Group({self.member_id}), {[f"{repr(value)}" for value in self.members]}"
+    def __call__(self, initial_value = None,
+                 member_id : str = "",
+                 member : 'SubGroup | Setting | None' = None
+                 ) -> 'Setting | SubGroup':
         """
         Allows the group to be called with a member ID and an optional initial value,
         adding a new member to the group.
 
         Params:
-            member_id (str): A unique identifier for the member to be added.
-            member (MasterGroup | SubGroup | Setting):        
-        Args:
-            initial_value: The initial value of the member, if applicable.
+            initial_value: The initial value of the Setting to be created and added.
+            member_id (str): A unique identifier for the member to be created and added.
+            member (SubGroup | Setting): A prexisting member to add to the group.
 
         Returns:
             Setting: A new Setting instance if initial_value is provided, otherwise a SubGroup instance.
             Group: A new SubGroup instance if initial_value is not provided.
         """
-       
-        if member_id is not None:
-            if initial_value is not None:
-                new_member = Setting(member_id, initial_value)
-                self.add_member(new_member)
-                return new_member
-            else:
-                new_member = SubGroup(member_id, self)
-                self.add_member(new_member)
-                return new_member
-        elif member is not None:
-            self.add_member(member)
-            return member
-        raise TypeError("Must add one of the following; New Setting(member_id, initial_vaile), New Group(MasterGroup, SubGroup), Member(Setting, MasterGroup, SubGroup)")
+
+        if (initial_value or member_id) and member:
+            raise ValueError("Still gonna rework this and not writing anything fancy right now")
+        if initial_value and member_id:
+            new_member = Setting(member_id, initial_value)
+            self.add_member(new_member)
+        elif member_id:
+            new_member = SubGroup(member_id, self)
+            self.add_member(new_member)
+        elif member:
+            new_member = member
+            self.add_member(new_member)
+        else:
+            raise ValueError("Same shit as before I'm not really ready to work on this")
+        return new_member
     @property
     def member_id(self) -> str:
         """
@@ -127,7 +128,7 @@ class MasterGroup:
         """
 
         # Adds a new entry.
-        self._members.append([member_to_add.member_id, member_to_add])
+        self._members.append(member_to_add)
     def remove_member(self, member_id: str) -> bool:
         """
         Removes a member with the member_id from the configuration.
