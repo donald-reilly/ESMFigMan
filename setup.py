@@ -12,7 +12,7 @@ setup(
     packages=find_packages(where="src"),
     install_requires=[
         "PyYaml>=6.0.2"
-    ]
+    ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License"
