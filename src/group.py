@@ -1,5 +1,5 @@
-from src.setting import Setting
-from src.decorators import *
+from setting import Setting
+from decorators import *
 
 class MasterGroup:
     """

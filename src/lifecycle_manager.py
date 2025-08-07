@@ -1,5 +1,5 @@
-from src.serialize import To_File
-from src.group import MasterGroup, SubGroup
+from serialize import To_File
+from group import MasterGroup, SubGroup
 
 class LifeCycleManager:
     """

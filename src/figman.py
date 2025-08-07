@@ -1,5 +1,5 @@
-from src.group import MasterGroup
-from src.lifecycle_manager import LifeCycleManager
+from group import MasterGroup
+from lifecycle_manager import LifeCycleManager
 
 class FigMan:
     """
