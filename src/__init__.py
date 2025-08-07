@@ -16,5 +16,8 @@ Example:
 """
 
 from src.figman import FigMan
+from src.setting import Setting
+from src.group import SubGroup, MasterGroup
 
-__all__ = ['FigMan']
+
+__all__ = ['FigMan', 'Setting', 'SubGroup', 'MasterGroup']
